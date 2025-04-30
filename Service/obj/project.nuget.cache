@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "2p7C8mbccCs=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\user1\\Desktop\\CV Site\\Service\\Service.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\user1\\.nuget\\packages\\octokit\\14.0.0\\octokit.14.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
