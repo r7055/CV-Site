@@ -9,6 +9,8 @@ namespace Service
         Task<List<Repository>> SearchRepositoriesAsync(string repoName = null, string language = null, string userName = null);
         Task<int> GetUserFollowersAsync(string userName);
         Task<List<Repository>> SearchRepositoriesInCSharp();
+        Task<DateTime> GetLastUpdateTimeAsync(string userName);
+
     }
 
 }

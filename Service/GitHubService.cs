@@ -66,6 +66,32 @@ namespace GitHub
             return result.Items.ToList();
         }
 
+        public async Task<DateTime> GetLastUpdateTimeAsync(string userName)
+        {
+            var repositories = await _client.Repository.GetAllForUser(userName);
+
+            // אם אין ריפוזיטוריז, החזר DateTime מינימלי
+            if (repositories.Count == 0)
+            {
+                return DateTime.MinValue;
+            }
+
+            // קבל את זמן העדכון האחרון של הריפוזיטורי הראשון
+            var lastCommitDate = DateTime.MinValue;
+
+            foreach (var repo in repositories)
+            {
+                var lastCommit = await _client.Repository.Commit.GetAll(repo.Owner.Login, repo.Name);
+                var lastCommitDateForRepo = lastCommit.OrderByDescending(c => c.Commit.Committer.Date).FirstOrDefault()?.Commit.Committer.Date;
+
+                if (lastCommitDateForRepo.HasValue && lastCommitDateForRepo.Value > lastCommitDate)
+                {
+                    lastCommitDate = lastCommitDateForRepo.Value;
+                }
+            }
+
+            return lastCommitDate;
+        }
 
     }
 }
