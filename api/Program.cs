@@ -12,15 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
 //builder.Services.Configure<RepositoryPortfolio>(builder.Configuration.GetSection(nameof(RepositoryPortfolio)));
 builder.Services.AddGitHubIntegration(options=>builder.Configuration.GetSection(nameof(GitHubIntegrationOptions)).Bind(options));
+
+builder.Services.Configure<GitHubIntegrationOptions>(builder.Configuration.GetSection(nameof(GitHubIntegrationOptions)));
+
+
 builder.Services.AddSwaggerGen();
-
-
-builder.Services.AddScoped<IMemoryCache, MemoryCache>();
-builder.Services.AddScoped<IGitHubService, GitHubService>();
-builder.Services.Decorate<IGitHubService,CachedGitHubService>();
-
 var app = builder.Build();
 
 

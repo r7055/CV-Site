@@ -2,17 +2,11 @@
   {
     "ContainingType": "api.Controllers.GitHubController",
     "Method": "GetUserFollowers",
-    "RelativePath": "api/GitHub/followers/{userName}",
+    "RelativePath": "api/GitHub/followers",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "System.Int32",
@@ -28,17 +22,11 @@
   {
     "ContainingType": "api.Controllers.GitHubController",
     "Method": "GetPortfolio",
-    "RelativePath": "api/GitHub/portfolio/{userName}",
+    "RelativePath": "api/GitHub/portfolio",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[api.RepositoryPortfolio, Service, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",

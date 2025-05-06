@@ -1,4 +1,5 @@
 ﻿using api;
+using Microsoft.Extensions.Options;
 using Octokit;
 using Service;
 
@@ -7,13 +8,18 @@ namespace GitHub
     public class GitHubService : IGitHubService
     {
         private readonly GitHubClient _client;
-        public GitHubService()
+        private readonly GitHubIntegrationOptions _option;
+        public GitHubService(IOptions<GitHubIntegrationOptions> options)
         {
-            _client = new GitHubClient(new ProductHeaderValue("my-github-app"));
+            _option = options.Value;
+            _client = new GitHubClient(new ProductHeaderValue("my-github-app"))
+            {
+                Credentials = new Credentials(_option.GitHubToken) 
+            };
         }
-        public async Task<int> GetUserFollowersAsync(string userName)
+        public async Task<int> GetUserFollowersAsync()
         {
-            var user = await _client.User.Get(userName);
+            var user = await _client.User.Get(_option.UserName);
             return user.Followers;
         }
         public async Task<List<Repository>> SearchRepositoriesInCSharp()
@@ -22,9 +28,9 @@ namespace GitHub
             var result = await _client.Search.SearchRepo(request);
             return result.Items.ToList();
         }
-        public async Task<List<RepositoryPortfolio>> GetPortfolioAsync(string userName)
+        public async Task<List<RepositoryPortfolio>> GetPortfolioAsync()
         {
-            var repositories = await _client.Repository.GetAllForUser(userName);
+            var repositories = await _client.Repository.GetAllForUser(_option.UserName);
             var portfolio = new List<RepositoryPortfolio>();
 
             foreach (var repo in repositories)
@@ -47,28 +53,25 @@ namespace GitHub
 
             return portfolio;
         }
-
         private async Task<List<string>> GetLanguages(string owner, string repoName)
         {
             var languages = await _client.Repository.GetAllLanguages(owner, repoName);
             return languages.Select(lang => lang.Name).ToList();
         }
-
-        public async Task<List<Repository>> SearchRepositoriesAsync(string repoName = null, string language = null, string userName = null)
+        public async Task<List<Repository>> SearchRepositoriesAsync(string repoName = null, string language = null)
         {
             var request = new SearchRepositoriesRequest(repoName)
             {
                 Language = language != null ? (Language?)Enum.Parse(typeof(Language), language, true) : null,
-                User = userName
+                User = _option.UserName,
             };
 
             var result = await _client.Search.SearchRepo(request);
             return result.Items.ToList();
         }
-
-        public async Task<DateTime> GetLastUpdateTimeAsync(string userName)
+        public async Task<DateTime> GetLastUpdateTimeAsync()
         {
-            var repositories = await _client.Repository.GetAllForUser(userName);
+            var repositories = await _client.Repository.GetAllForUser(_option.UserName);
 
             // אם אין ריפוזיטוריז, החזר DateTime מינימלי
             if (repositories.Count == 0)
@@ -86,7 +89,7 @@ namespace GitHub
 
                 if (lastCommitDateForRepo.HasValue && lastCommitDateForRepo.Value > lastCommitDate)
                 {
-                    lastCommitDate = lastCommitDateForRepo.Value;
+                    lastCommitDate = lastCommitDateForRepo.Value.DateTime; 
                 }
             }
 

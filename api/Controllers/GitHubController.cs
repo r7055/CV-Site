@@ -18,10 +18,10 @@ namespace api.Controllers
             _gitHubService = gitHubService;
         }
 
-        [HttpGet("portfolio/{userName}")]
-        public async Task<ActionResult<List<RepositoryPortfolio>>> GetPortfolio(string userName)
+        [HttpGet("portfolio")]
+        public async Task<ActionResult<List<RepositoryPortfolio>>> GetPortfolio()
         {
-            var portfolio = await _gitHubService.GetPortfolioAsync(userName);
+            var portfolio = await _gitHubService.GetPortfolioAsync();
             return Ok(portfolio);
         }
 
@@ -31,14 +31,14 @@ namespace api.Controllers
             [FromQuery] string language = null,
             [FromQuery] string userName = null)
         {
-            var repositories = await _gitHubService.SearchRepositoriesAsync(repoName, language, userName);
+            var repositories = await _gitHubService.SearchRepositoriesAsync(repoName, language);
             return Ok(repositories);
         }
 
-        [HttpGet("followers/{userName}")]
-        public async Task<ActionResult<int>> GetUserFollowers(string userName)
+        [HttpGet("followers")]
+        public async Task<ActionResult<int>> GetUserFollowers()
         {
-            var followersCount = await _gitHubService.GetUserFollowersAsync(userName);
+            var followersCount = await _gitHubService.GetUserFollowersAsync();
             return Ok(followersCount);
         }
 
